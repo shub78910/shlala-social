@@ -16,4 +16,6 @@ postRouter.get('/posts/following', authMiddleware, postController.getPostByFollo
 
 postRouter.post('/posts/like/:postId', authMiddleware, postController.like);
 postRouter.post('/posts/unlike/:postId', authMiddleware, postController.unlike);
+
+postRouter.get('/posts/comments/:postId', authMiddleware, postController.getCommentsForPost);
 export default postRouter;

@@ -36,6 +36,7 @@ mongoose
 app.use('/api', routes.authRouter);
 app.use('/api', routes.postRouter);
 app.use('/api', routes.userRouter);
+app.use('/api', routes.commentRouter);
 
 // Start the server
 app.listen(PORT, () => {

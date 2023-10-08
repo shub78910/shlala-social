@@ -9,7 +9,7 @@ userRouter.post('/login', authController.login);
 userRouter.get('/refreshToken', authController.refreshToken);
 userRouter.get('/logout', authController.logout);
 
-//todo:
+// Todo:
 // forgot password
 // reset password
 

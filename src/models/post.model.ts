@@ -22,22 +22,10 @@ const postSchema = new mongoose.Schema(
         ref: modelConstants.userModelName,
       },
     ],
-    comments: [
-      {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: modelConstants.userModelName,
-          required: true,
-        },
-        text: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: modelConstants.commentModelName }],
   },
   { timestamps: true },
 );
 
-const Post = mongoose.model('Post', postSchema);
+const Post = mongoose.model(modelConstants.postModelName, postSchema);
 export default Post;

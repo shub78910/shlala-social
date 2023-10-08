@@ -7,7 +7,13 @@ import { generateAccessToken } from '../utils/generateAccessToken';
 const authController = {
   register: async (req: Request, res: Response) => {
     try {
-      const { username, password } = req.body;
+      const {
+        username,
+        password,
+      }: {
+        username: string;
+        password: string;
+      } = req.body;
 
       const existingUser = await User.findOne({ username });
       if (existingUser) {
@@ -28,7 +34,13 @@ const authController = {
 
   login: async (req: Request, res: Response) => {
     try {
-      const { username, password } = req.body;
+      const {
+        username,
+        password,
+      }: {
+        username: string;
+        password: string;
+      } = req.body;
 
       const user = await User.findOne({ username });
 
@@ -71,7 +83,9 @@ const authController = {
         return res.status(401).json({ message: 'Invalid refresh token.' });
       }
 
-      const accessToken = generateAccessToken(userData);
+      // If there are any bugs with different refresh token, that is probably because im converting it into an object before passing it to the generateAccessToken function
+
+      const accessToken = generateAccessToken({ userData });
       res.json({ accessToken });
     } catch (error) {
       console.error(error);

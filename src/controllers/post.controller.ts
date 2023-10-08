@@ -3,13 +3,22 @@ import Post from '../models/post.model';
 import { IQuery, IReqAuth, objectId } from '../config/interface';
 import User from '../models/user.model';
 import { convertToObjectId } from '../utils/convertToObjectId';
+import Comment from '../models/comment.model';
 
 const postController = {
   createPost: async (req: IReqAuth, res: Response) => {
     try {
-      const { caption, image, userId } = req.body;
+      const {
+        caption,
+        image,
+        userId,
+      }: {
+        caption: string;
+        image: string;
+        userId: string;
+      } = req.body;
 
-      //todo:
+      // Todo:
       // add location, tag people, add music maybe
 
       const newPost = new Post({
@@ -35,7 +44,11 @@ const postController = {
 
   updatePost: async (req: IReqAuth, res: Response) => {
     try {
-      const { caption } = req.body;
+      const {
+        caption,
+      }: {
+        caption: string;
+      } = req.body;
 
       const post = await Post.findById(req.params.postId);
 
@@ -188,7 +201,7 @@ const postController = {
 
   like: async (req: IReqAuth, res: Response) => {
     try {
-      const postId = req.params.postId;
+      const postId: string = req.params.postId;
       const loggedInUserId: objectId = req.user?._id;
 
       await Post.findByIdAndUpdate(postId, { $addToSet: { likes: loggedInUserId } });
@@ -202,7 +215,7 @@ const postController = {
 
   unlike: async (req: IReqAuth, res: Response) => {
     try {
-      const postId = req.params.postId;
+      const postId: string = req.params.postId;
       const loggedInUserId: objectId = req.user?._id;
 
       await Post.findByIdAndUpdate(postId, { $pull: { likes: loggedInUserId } });
@@ -211,6 +224,33 @@ const postController = {
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error unliking the post.' });
+    }
+  },
+
+  getCommentsForPost: async (req: IReqAuth, res: Response) => {
+    try {
+      const postId: objectId = convertToObjectId(req.params.postId);
+      const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
+
+      const comments = await Comment.aggregate([
+        {
+          $match: { postId: postId },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $skip: parseInt(offset),
+        },
+        {
+          $limit: parseInt(limit),
+        },
+      ]);
+
+      res.json(comments);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching comments for the post.' });
     }
   },
 };

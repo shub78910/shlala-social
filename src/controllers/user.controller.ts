@@ -57,6 +57,46 @@ const userController = {
       res.status(500).json({ message: 'Error unfollowing the user.' });
     }
   },
+
+  editUser: async (req: IReqAuth, res: Response) => {
+    try {
+      const loggedInUserId: objectId = req.user?._id;
+
+      const {
+        username,
+        profilePicture,
+        bio,
+      }: {
+        username: IUser['username'];
+        profilePicture: IUser['profilePicture'];
+        bio: IUser['bio'];
+      } = req.body;
+
+      await User.findByIdAndUpdate(loggedInUserId, { username, profilePicture, bio });
+
+      res.json({ message: 'User updated.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error updating the user.' });
+    }
+  },
+
+  getUser: async (req: IReqAuth, res: Response) => {
+    try {
+      const userId = convertToObjectId(req.params.userId);
+
+      const user = await User.findById(userId).select('-password');
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+      }
+
+      res.json({ user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching the user.' });
+    }
+  },
 };
 
 export default userController;
