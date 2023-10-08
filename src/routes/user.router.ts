@@ -10,6 +10,8 @@ userRouter.post('/user/unFollow/:userId', authMiddleware, userController.unfollo
 
 userRouter.get('/user/getUser/:userId', authMiddleware, userController.getUser);
 
+userRouter.get('/user/searchUser', authMiddleware, userController.searchUser);
+
 // Todo:
 // controllers for follow req sent and accepted
 export default userRouter;

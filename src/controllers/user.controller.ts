@@ -97,6 +97,21 @@ const userController = {
       res.status(500).json({ message: 'Error fetching the user.' });
     }
   },
+
+  searchUser: async (req: IReqAuth, res: Response) => {
+    try {
+      const query = req.query.username as string;
+
+      const users = await User.find({
+        username: { $regex: query, $options: 'i' },
+      }).select('-password');
+
+      res.json({ users });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error searching for users.' });
+    }
+  },
 };
 
 export default userController;

@@ -99,7 +99,12 @@ const postController = {
 
       const posts = await Post.aggregate([
         {
-          $match: {},
+          $match: {
+            $nor: [
+              { user: loggedInUserId }, // Exclude your own posts
+              { user: { $in: req.user?.following } }, // Exclude posts from users you follow
+            ],
+          },
         },
         {
           $sort: { createdAt: -1 },
