@@ -10,9 +10,11 @@ const authController = {
       const {
         username,
         password,
+        email,
       }: {
         username: string;
         password: string;
+        email: string;
       } = req.body;
 
       const existingUser = await User.findOne({ username });
@@ -20,9 +22,14 @@ const authController = {
         return res.status(409).json({ message: 'Username already exists' });
       }
 
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) {
+        return res.status(409).json({ message: 'Email already exists' });
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const newUser = new User({ username, password: hashedPassword });
+      const newUser = new User({ username, password: hashedPassword, email });
       await newUser.save();
 
       res.status(201).json({ message: 'User registered successfully' });
