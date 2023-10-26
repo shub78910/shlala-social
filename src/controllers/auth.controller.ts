@@ -32,7 +32,7 @@ const authController = {
       const newUser = new User({ username, password: hashedPassword, email });
       await newUser.save();
 
-      res.status(201).json({ message: 'User registered successfully' });
+      res.status(201).json({ message: 'User registered successfully', user: newUser });
     } catch (error) {
       console.error('Error registering user:', error);
       res.status(500).json({ message: 'Internal server error' });
@@ -60,26 +60,37 @@ const authController = {
         return res.status(401).json({ message: 'Invalid password' });
       }
 
-      const userData = { username: user.username, _id: user._id };
+      const userData = { username: user.username, _id: user._id, profilePicture: user.profilePicture };
 
       const accessToken = generateAccessToken(userData);
 
-      res.json({ message: 'Login successful', accessToken: accessToken });
+      res.json({
+        message: 'Login successful',
+        user: {
+          _id: user._id,
+          username: user.username,
+          profilePicture: user.profilePicture,
+          followingCount: user.following.length,
+          followersCount: user.followers.length,
+          bio: user.bio,
+          accessToken,
+        },
+      });
     } catch (error) {
       console.error('Error logging in:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
 
-  logout: async (req: Request, res: Response) => {
-    try {
-      res.clearCookie('refreshToken', { path: '/api/refreshToken' });
-      return res.json({ message: 'Logged out' });
-    } catch (error) {
-      console.error('Error logging out:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  },
+  // logout: async (req: Request, res: Response) => {
+  //   try {
+  //     res.clearCookie('refreshToken', { path: '/api/refreshToken' });
+  //     return res.json({ message: 'Logged out' });
+  //   } catch (error) {
+  //     console.error('Error logging out:', error);
+  //     res.status(500).json({ message: 'Internal server error' });
+  //   }
+  // },
 
   refreshToken: async (req: Request, res: Response) => {
     try {

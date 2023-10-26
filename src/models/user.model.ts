@@ -7,17 +7,23 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   password: {
     type: String,
     required: true,
   },
   profilePicture: {
     type: String,
-    default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
+    default: 'https://freepngimg.com/thumb/model/94766--free-download-image.png',
   },
   bio: {
     type: String,
     maxlength: 160,
+    default: "Hey, I'm new to shlala social",
   },
   posts: [
     {

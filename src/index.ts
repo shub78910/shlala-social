@@ -13,12 +13,7 @@ const DB_URI = process.env.MONGODB_URI as string;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(
-  cors({
-    origin: `${process.env.BASE_URL}`,
-    credentials: true,
-  }),
-);
+app.use(cors());
 app.use(cookieParser());
 
 mongoose

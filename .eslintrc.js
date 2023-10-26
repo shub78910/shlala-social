@@ -14,7 +14,7 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', { singleQuote: true, semi: true }],
     'no-extra-boolean-cast': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
-    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'no-unused-vars': 'error',
   },
 };

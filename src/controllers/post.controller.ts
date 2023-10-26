@@ -11,11 +11,9 @@ const postController = {
       const {
         caption,
         image,
-        userId,
       }: {
         caption: string;
         image: string;
-        userId: string;
       } = req.body;
 
       // Todo:
@@ -24,18 +22,16 @@ const postController = {
       const newPost = new Post({
         caption,
         image,
-        userId,
+        userId: req.user?._id,
+        userName: req.user?.username,
+        userImage: req.user?.profilePicture,
       });
 
       const savedPost = await newPost.save();
 
-      console.log({ savedPost });
-
       await User.findByIdAndUpdate(req.user?._id, { $push: { posts: savedPost._id } }, { new: true });
 
-      console.log('done');
-
-      res.status(201).json(savedPost);
+      res.status(201).json({ message: 'Post created successfully.' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'An error occurred while creating the post.' });
@@ -97,12 +93,14 @@ const postController = {
       const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
       const loggedInUserId: objectId = req.user?._id;
 
+      console.log({ loggedInUserId });
+
       const posts = await Post.aggregate([
         {
           $match: {
             $nor: [
               { user: loggedInUserId }, // Exclude your own posts
-              { user: { $in: req.user?.following } }, // Exclude posts from users you follow
+              { user: { $in: req.user?.following ?? [] } }, // Exclude posts from users you follow
             ],
           },
         },
@@ -123,6 +121,8 @@ const postController = {
           },
         },
       ]);
+
+      console.log({ posts });
 
       res.json({ posts });
     } catch (error) {
@@ -153,6 +153,9 @@ const postController = {
           $addFields: {
             userHasLiked: {
               $in: [userId, '$likes'],
+            },
+            likeCount: {
+              $size: '$likes',
             },
           },
         },
@@ -189,7 +192,7 @@ const postController = {
           $limit: parseInt(limit),
         },
         {
-          $project: {
+          $addFields: {
             userHasLiked: {
               $in: [loggedInUserId, '$likes'],
             },

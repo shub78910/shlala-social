@@ -1,34 +1,40 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect } from 'react';
 import When from '../When';
-import Header from './Header';
+import Header from './header/Header';
+import ReduxProvider from '@/store/ReduxProvider';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const MasterLayout = ({
   children,
-  showNav = true,
   showHeader = true,
   showFooter = true,
+  showHeaderMenus = true,
 }: {
   children: React.ReactNode;
-  showNav?: boolean;
   showHeader?: boolean;
   showFooter?: boolean;
+  showHeaderMenus?: boolean;
 }) => {
+  const queryClient = new QueryClient();
+
   return (
-    <div className="bg-gray-900 min-h-screen flex flex-col">
-      <When isTrue={showHeader}>
-        <Header />
-      </When>
+    <ReduxProvider>
+      <QueryClientProvider client={queryClient} contextSharing={true}>
+        <div className="bg-gray-900 flex flex-col min-h-screen">
+          <When isTrue={showHeader}>
+            <Header showHeaderMenus={showHeaderMenus} />
+          </When>
 
-      <When isTrue={showNav}>
-        <nav className="bg-gray-900 text-white p-2">NAVIGATION</nav>
-      </When>
+          <main className="p-2">{children}</main>
 
-      <main className="flex-grow p-4">{children}</main>
-
-      <When isTrue={showFooter}>
-        <footer className="bg-gray-900 text-white p-4">FOOTER</footer>
-      </When>
-    </div>
+          {/* <When isTrue={showFooter}>
+          <footer className="bg-gray-900 text-white">FOOTER</footer>
+        </When> */}
+        </div>
+      </QueryClientProvider>
+    </ReduxProvider>
   );
 };
 

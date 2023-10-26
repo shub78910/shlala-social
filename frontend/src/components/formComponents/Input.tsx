@@ -7,7 +7,7 @@ const Input = ({
   name,
   ...rest
 }: {
-  placeholder: string;
+  placeholder?: string;
   className?: string;
   errors: any;
   name: string;
@@ -25,7 +25,7 @@ const Input = ({
         errors={errors}
         name={name}
         render={({ message }) => {
-          return <span className="text-red-500">{message}</span>;
+          return <span className="text-red-400">{message}</span>;
         }}
       />
     </div>

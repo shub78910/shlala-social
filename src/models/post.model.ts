@@ -8,6 +8,14 @@ const postSchema = new mongoose.Schema(
       ref: modelConstants.userModelName,
       required: [true, 'User Id is required.'],
     },
+    userName: {
+      type: String,
+      required: [true, 'User name is required.'],
+    },
+    userImage: {
+      type: String,
+      required: [true, 'User image is required.'],
+    },
     image: {
       type: String,
       required: [true, 'Image is required.'],
