@@ -1,5 +1,15 @@
 {
-  "cSpell.words": ["maxlength", "reduxjs", "shlala", "Unfollow", "unfollowed", "unfollowing", "unliked", "unliking"],
+  "cSpell.words": [
+    "maxlength",
+    "reduxjs",
+    "shlala",
+    "tanstack",
+    "Unfollow",
+    "unfollowed",
+    "unfollowing",
+    "unliked",
+    "unliking"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   }

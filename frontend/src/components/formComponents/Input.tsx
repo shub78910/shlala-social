@@ -1,4 +1,5 @@
 import { ErrorMessage } from '@hookform/error-message';
+import When from '../When';
 
 const Input = ({
   placeholder,
@@ -9,7 +10,7 @@ const Input = ({
 }: {
   placeholder?: string;
   className?: string;
-  errors: any;
+  errors?: any;
   name: string;
   rest?: any;
 }) => {
@@ -17,17 +18,19 @@ const Input = ({
     <div className="input">
       <input
         name={name}
-        className={`p-2 py-4 rounded-lg w-full border-none mb-2 ${className}`}
+        className={`py-2 pl-2 rounded-lg w-full border-none mb-2 ${className}`}
         placeholder={placeholder}
         {...rest}
       />
-      <ErrorMessage
-        errors={errors}
-        name={name}
-        render={({ message }) => {
-          return <span className="text-red-400">{message}</span>;
-        }}
-      />
+      <When isTrue={errors}>
+        <ErrorMessage
+          errors={errors}
+          name={name}
+          render={({ message }) => {
+            return <span className="text-red-400">{message}</span>;
+          }}
+        />
+      </When>
     </div>
   );
 };

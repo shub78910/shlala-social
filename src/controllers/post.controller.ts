@@ -93,8 +93,6 @@ const postController = {
       const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
       const loggedInUserId: objectId = req.user?._id;
 
-      console.log({ loggedInUserId });
-
       const posts = await Post.aggregate([
         {
           $match: {
@@ -121,8 +119,6 @@ const postController = {
           },
         },
       ]);
-
-      console.log({ posts });
 
       res.json({ posts });
     } catch (error) {

@@ -12,6 +12,8 @@ userRouter.get('/user/getUser/:userId', authMiddleware, userController.getUser);
 
 userRouter.get('/user/searchUser', authMiddleware, userController.searchUser);
 
+userRouter.patch('/user/editUser', authMiddleware, userController.editUser);
+
 // Todo:
 // controllers for follow req sent and accepted
 export default userRouter;

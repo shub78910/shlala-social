@@ -4,7 +4,6 @@ let token: string | null = null;
 if (typeof window !== 'undefined') {
   token = localStorage.getItem('token');
 }
-console.log({ token });
 
 const baseURL = 'http://localhost:5000';
 

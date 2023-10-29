@@ -2,6 +2,7 @@ import { IReqAuth, IUser, objectId } from '../config/interface';
 import User from '../models/user.model';
 import { Response } from 'express';
 import { convertToObjectId } from '../utils/convertToObjectId';
+import Post from '../models/post.model';
 
 const userController = {
   follow: async (req: IReqAuth, res: Response) => {
@@ -67,9 +68,9 @@ const userController = {
         profilePicture,
         bio,
       }: {
-        username: IUser['username'];
-        profilePicture: IUser['profilePicture'];
-        bio: IUser['bio'];
+        username: string;
+        profilePicture: string;
+        bio: string;
       } = req.body;
 
       await User.findByIdAndUpdate(loggedInUserId, { username, profilePicture, bio });
@@ -91,7 +92,24 @@ const userController = {
         return res.status(404).json({ message: 'User not found.' });
       }
 
-      res.json({ user });
+      const posts = await Post.aggregate([
+        {
+          $match: { userId: userId },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+
+        {
+          $addFields: {
+            userHasLiked: {
+              $in: [userId, '$likes'],
+            },
+          },
+        },
+      ]);
+
+      res.json({ user, posts });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error fetching the user.' });

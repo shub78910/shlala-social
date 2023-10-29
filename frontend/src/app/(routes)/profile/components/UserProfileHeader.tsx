@@ -1,30 +1,62 @@
+import When from '@/components/When';
 import Button from '@/components/formComponents/Button';
 import Image from 'next/image';
+import { useState } from 'react';
+import EditProfile from './EditProfile';
 
-const UserProfileHeader: React.FC = () => {
+const UserProfileHeader = ({
+  userName,
+  bio,
+  profilePicture,
+  refetch,
+}: {
+  userName: string;
+  bio: string;
+  profilePicture: string;
+  refetch: any;
+}) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
   return (
     <div className="p-2 px-4">
       <div className="flex justify-between items-center">
-        <div className="flex gap-2">
-          <div className="rounded-full bg-white object-contain p-1">
+        <div className="flex items-center gap-2">
+          <div>
             <Image
-              src="https://freepngimg.com/thumb/model/94766--free-download-image.png"
+              src={profilePicture}
               alt="profile"
               width={50}
               height={50}
+              className="rounded-full bg-white object-contain"
             />
           </div>
-          <h1 className="text-2xl font-semibold">User Name</h1>
+          <h1 className="text-2xl font-semibold">{userName}</h1>
         </div>
         <div>
-          <Button className="bg-blue-800 hover:bg-blue-900">Edit Profile</Button>
+          <Button
+            className="bg-gray-800 hover:bg-gray-900 text-white"
+            {...{
+              onClick: () => setModalOpen(true),
+            }}
+          >
+            Edit Profile
+          </Button>
         </div>
+
+        <When isTrue={isModalOpen}>
+          <EditProfile
+            {...{
+              userName,
+              bio,
+              profilePicture,
+              setModalOpen,
+              refetch,
+            }}
+          />
+        </When>
       </div>
 
-      <div className="mt-4">
-        User Bio User Bio User Bio User Bio User Bio User Bio User Bio User Bio User Bio User Bio User Bio User Bio User
-        Bio User Bio User Bio{' '}
-      </div>
+      <div className="mt-4">{bio}</div>
     </div>
   );
 };

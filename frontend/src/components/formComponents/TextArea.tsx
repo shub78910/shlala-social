@@ -17,7 +17,7 @@ const TextArea = ({
     <div>
       <textarea
         name={name}
-        className={`py-4 rounded-lg w-full border-none mb-2 ${className}`}
+        className={`py-2 pl-2 rounded-lg w-full border-none mb-2 resize-y ${className}`}
         placeholder={placeholder}
         {...rest}
       />
