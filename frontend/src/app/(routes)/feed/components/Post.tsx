@@ -4,6 +4,11 @@ import { BiCommentDetail } from 'react-icons/bi';
 import { BiSolidShareAlt } from 'react-icons/bi';
 import { FaEllipsisV } from 'react-icons/fa';
 import Button from '../../../../components/formComponents/Button';
+import When from '@/components/When';
+import { useState } from 'react';
+import { postMenus } from '@/static/postMenus';
+import DeleteModal from '@/components/feed/DeleteModal';
+import EditModal from '@/components/feed/EditModal';
 
 const Post = ({
   userName,
@@ -12,6 +17,9 @@ const Post = ({
   createdAt,
   image,
   likeCount,
+  _id,
+  userHasLiked,
+  refetch,
 }: {
   userName: string;
   userImage: string;
@@ -19,7 +27,27 @@ const Post = ({
   createdAt: string;
   image: string;
   likeCount: number;
+  _id: string;
+  userHasLiked: boolean;
+  refetch?: any;
 }) => {
+  const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+
+  const handleMoreOptionsClick = (menu: any) => {
+    if (menu.type === 'DELETE') {
+      setShowDeleteModal(true);
+    } else {
+      setShowEditModal(true);
+    }
+    setShowOptions(false);
+  };
+
+  const handleLikeClick = () => {
+    console.log('like');
+  };
+
   return (
     <div className="bg-gray-200 p-4 m-2 rounded-md shadow-md">
       <div className="flex items-start gap-2">
@@ -31,13 +59,17 @@ const Post = ({
       </div>
       <p className="mt-4">{caption}</p>
       <Image src={image} alt="Post" width={500} height={500} className="mt-4 w-full object-cover rounded" />
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-between mt-4 relative">
         <div className="flex space-x-4">
-          <div>
-            <Button>
-              <BiSolidLike size={20} />
+          <div className="flex gap-2 items-center">
+            <Button
+              {...{
+                onClick: handleLikeClick,
+              }}
+            >
+              <BiSolidLike size={20} color={`${userHasLiked ? 'blue' : 'black'}`} />
             </Button>
-            <span>{likeCount}</span>
+            <span className="text-lg font-medium">{likeCount}</span>
           </div>
           <Button>
             <BiCommentDetail size={20} />
@@ -46,9 +78,46 @@ const Post = ({
             <BiSolidShareAlt size={20} />
           </Button>
         </div>
-        <Button>
+        <Button
+          {...{
+            onClick: () => setShowOptions(!showOptions),
+          }}
+        >
           <FaEllipsisV size={20} />
         </Button>
+        <When isTrue={showOptions}>
+          <div className="bg-gray-800 absolute -right-40 bottom-12 z-30  text-white w-1/3 rounded-md">
+            {postMenus.map((menu, index) => {
+              return (
+                <button
+                  key={index}
+                  className={`text-lg p-2 text-left w-full block font-semibold text-white rounded-md bg-transparent hover:bg-gray-600 cursor-pointer border-none outline-none `}
+                  onClick={() => handleMoreOptionsClick(menu)}
+                >
+                  {menu.label}
+                </button>
+              );
+            })}
+          </div>
+        </When>
+        <When isTrue={showDeleteModal}>
+          <DeleteModal
+            {...{
+              setShowDeleteModal,
+              _id,
+            }}
+          />
+        </When>
+        <When isTrue={showEditModal}>
+          <EditModal
+            {...{
+              setShowEditModal,
+              _id,
+              caption,
+              refetch,
+            }}
+          />
+        </When>
       </div>
     </div>
   );

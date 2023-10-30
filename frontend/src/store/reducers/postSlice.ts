@@ -1,5 +1,4 @@
 import { IPost } from '@/Interface/IPost';
-import { getDataAPI } from '@/utils/axiosCall';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface PostState {

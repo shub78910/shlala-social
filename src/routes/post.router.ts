@@ -13,6 +13,7 @@ postRouter.get('/posts', authMiddleware, postController.getPosts);
 postRouter.get('/posts/user/:userId', authMiddleware, postController.getPostsByUser);
 
 postRouter.get('/posts/following', authMiddleware, postController.getPostByFollowing);
+postRouter.get('/posts/:postId', authMiddleware, postController.getPostById);
 
 postRouter.post('/posts/like/:postId', authMiddleware, postController.like);
 postRouter.post('/posts/unlike/:postId', authMiddleware, postController.unlike);

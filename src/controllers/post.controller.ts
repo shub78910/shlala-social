@@ -89,6 +89,7 @@ const postController = {
   },
 
   getPosts: async (req: IReqAuth, res: Response) => {
+    // FOR EXPLORE PAGE
     try {
       const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
       const loggedInUserId: objectId = req.user?._id;
@@ -128,6 +129,7 @@ const postController = {
   },
 
   getPostsByUser: async (req: IReqAuth, res: Response) => {
+    // FOR PROFILE PAGEs
     try {
       const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
       const userId = convertToObjectId(req.params.userId);
@@ -165,6 +167,7 @@ const postController = {
   },
 
   getPostByFollowing: async (req: IReqAuth, res: Response) => {
+    // FOR FEED PAGE
     try {
       const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
 
@@ -200,6 +203,36 @@ const postController = {
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error fetching posts from followed users.' });
+    }
+  },
+
+  getPostById: async (req: IReqAuth, res: Response) => {
+    try {
+      const postId: objectId = convertToObjectId(req.params.postId);
+      const userId: objectId = convertToObjectId(req.user?._id);
+
+      const post = await Post.aggregate([
+        {
+          $match: { _id: postId },
+        },
+        {
+          $addFields: {
+            userHasLiked: {
+              $in: [userId, '$likes'],
+            },
+            likeCount: {
+              $size: '$likes',
+            },
+          },
+        },
+      ]);
+
+      console.log({ post: post[0] });
+
+      res.json({ post: post[0] });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching post.' });
     }
   },
 

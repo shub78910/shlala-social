@@ -1,4 +1,4 @@
-export const menus = [
+export const sidebarMenus = [
   { text: 'Feed', path: '/feed' },
   { text: 'Explore', path: '/explore' },
   { text: 'Message', path: '/message' },

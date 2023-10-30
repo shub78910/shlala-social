@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import Button from '../formComponents/Button';
 import { useState } from 'react';
 import { GoPlus } from 'react-icons/go';
-import { menus } from '@/static/menus';
+import { sidebarMenus } from '@/static/sidebarMenus';
 import When from '../When';
 import CreateNewPost from '../feed/CreateNewPost';
 import { useAppDispatch, useAppSelector } from '@/hooks/typeHooks';
@@ -41,7 +41,7 @@ const SidebarMenus = () => {
         <CreateNewPost setModalOpen={setModalOpen} />
       </When>
 
-      {menus.map((menu, index) => (
+      {sidebarMenus.map((menu, index) => (
         <button
           key={index}
           className={`w-full py-2 text-xl font-semibold text-white rounded-md bg-transparent hover:bg-gray-600 cursor-pointer border-none outline-none `}
