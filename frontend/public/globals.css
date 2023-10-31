@@ -5,5 +5,9 @@
 
 body{
     margin:0px;
-    padding : 0px
+    padding : 0px;
+}
+
+.z-50{
+    z-index: 10 !important;
 }

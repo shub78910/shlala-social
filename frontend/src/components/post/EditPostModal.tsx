@@ -9,7 +9,7 @@ import { patchDataAPI } from '@/utils/axiosCall';
 import { useState } from 'react';
 import TextArea from '../formComponents/TextArea';
 
-const EditModal = ({
+const EditPostModal = ({
   setShowEditModal,
   _id,
   caption,
@@ -95,4 +95,4 @@ const EditModal = ({
     </Modal>
   );
 };
-export default EditModal;
+export default EditPostModal;

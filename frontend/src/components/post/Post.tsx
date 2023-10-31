@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { BiSolidLike } from 'react-icons/bi';
 import { BiCommentDetail } from 'react-icons/bi';
 import { BiSolidShareAlt } from 'react-icons/bi';
 import { FaEllipsisV } from 'react-icons/fa';
@@ -8,8 +7,9 @@ import When from '@/components/When';
 import { useState } from 'react';
 import { postMenus } from '@/static/postMenus';
 import DeleteModal from '@/components/post/DeleteModal';
-import EditModal from '@/components/post/EditModal';
+import EditPostModal from '@/components/post/EditPostModal';
 import LikeButton from './LikeButton';
+import formatDate from '@/utils/formatDate';
 
 const Post = ({
   userName,
@@ -51,12 +51,12 @@ const Post = ({
         <Image src={userImage} alt={userName} height={40} width={40} className="rounded-full object-cover" />
         <div>
           <div className="font-bold">{userName}</div>
-          <div className="text-gray-500">{createdAt}</div>
+          <div className="text-gray-500 mt-1">{formatDate(createdAt)}</div>
         </div>
       </div>
-      <p className="mt-4">{caption}</p>
       <Image src={image} alt="Post" width={500} height={500} className="mt-4 w-full object-cover rounded" />
-      <div className="flex justify-between mt-4 relative">
+      <p className="mt-4">{caption}</p>
+      <div className="flex justify-between mt-4 relative z-0">
         <div className="flex space-x-4">
           <LikeButton
             {...{
@@ -103,7 +103,7 @@ const Post = ({
           />
         </When>
         <When isTrue={showEditModal}>
-          <EditModal
+          <EditPostModal
             {...{
               setShowEditModal,
               _id,

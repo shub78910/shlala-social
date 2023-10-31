@@ -92,7 +92,7 @@ const postController = {
     // FOR EXPLORE PAGE
     try {
       const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
-      const loggedInUserId: objectId = req.user?._id;
+      const loggedInUserId: objectId = convertToObjectId(req.user?._id);
 
       const posts = await Post.aggregate([
         {
@@ -117,6 +117,9 @@ const postController = {
             userHasLiked: {
               $in: [loggedInUserId, '$likes'],
             },
+            likeCount: {
+              $size: '$likes',
+            },
           },
         },
       ]);
@@ -132,7 +135,7 @@ const postController = {
     // FOR PROFILE PAGEs
     try {
       const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
-      const userId = convertToObjectId(req.params.userId);
+      const userId: objectId = convertToObjectId(req.params.userId);
 
       const posts = await Post.aggregate([
         {
@@ -171,7 +174,7 @@ const postController = {
     try {
       const { offset = '0', limit = '10' } = req.query as unknown as IQuery;
 
-      const loggedInUserId: objectId = req.user?._id;
+      const loggedInUserId: objectId = convertToObjectId(req.user?._id);
 
       const loggedInUser = await User.findById(loggedInUserId);
 
@@ -194,6 +197,9 @@ const postController = {
           $addFields: {
             userHasLiked: {
               $in: [loggedInUserId, '$likes'],
+            },
+            likeCount: {
+              $size: '$likes',
             },
           },
         },

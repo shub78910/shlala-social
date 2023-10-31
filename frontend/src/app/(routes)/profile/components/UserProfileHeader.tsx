@@ -2,7 +2,7 @@ import When from '@/components/When';
 import Button from '@/components/formComponents/Button';
 import Image from 'next/image';
 import { useState } from 'react';
-import EditProfile from './EditProfile';
+import EditProfileModal from './EditProfileModal';
 
 const UserProfileHeader = ({
   userName,
@@ -44,7 +44,7 @@ const UserProfileHeader = ({
         </div>
 
         <When isTrue={isModalOpen}>
-          <EditProfile
+          <EditProfileModal
             {...{
               userName,
               bio,

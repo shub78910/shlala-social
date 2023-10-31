@@ -25,7 +25,7 @@ const FeedLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         <div
-          className="w-full md:w-1/5 sticky top-20 text-white bg-gray-700 p-4 rounded shadow z-0"
+          className="w-full md:w-1/5 sticky z-20 top-20 text-white bg-gray-700 p-4 rounded shadow"
           style={{ height: '80vh' }}
         >
           Suggested Users Suggested Users Suggested Users Suggested Users Suggested Users Suggested Users Suggested

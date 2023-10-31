@@ -13,7 +13,7 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdOutlineCancel } from 'react-icons/md';
 
-const EditProfile = ({
+const EditProfileModal = ({
   userName,
   bio,
   profilePicture,
@@ -153,4 +153,4 @@ const EditProfile = ({
   );
 };
 
-export default EditProfile;
+export default EditProfileModal;

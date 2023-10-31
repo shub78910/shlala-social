@@ -1,5 +1,6 @@
 'use client';
 
+import Button from '@/components/formComponents/Button';
 import Header from '@/components/layout/header/Header';
 import { useAppDispatch } from '@/hooks/typeHooks';
 import { useRouter } from 'next/navigation';
@@ -20,12 +21,14 @@ export default function Home() {
           one stop for all your social needs
         </h5>
         <div className="flex justify-center space-x-20 mt-40">
-          <button
+          <Button
             className="w-60 bg-gray-50 text-black px-12 py-2 text-2xl rounded-xl cursor-pointer font-semibold"
-            onClick={handleClick}
+            {...{
+              onClick: handleClick,
+            }}
           >
             JOIN NOW
-          </button>
+          </Button>
         </div>
       </div>
     </div>

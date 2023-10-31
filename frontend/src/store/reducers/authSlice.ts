@@ -109,6 +109,7 @@ export const loginUser = (userData: ILogin) => {
 
 export const logoutUser = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('user');
 };
 
 export const firstLoad = () => {
