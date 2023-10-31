@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { GoPlus } from 'react-icons/go';
 import { sidebarMenus } from '@/static/sidebarMenus';
 import When from '../When';
-import CreateNewPost from '../feed/CreateNewPost';
+import CreateNewPost from '../post/CreateNewPost';
 import { useAppDispatch, useAppSelector } from '@/hooks/typeHooks';
 import { setSelectedMenu } from '@/store/reducers/miscSlice';
 

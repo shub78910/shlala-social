@@ -13,7 +13,7 @@ export const getDataAPI = async (url: string) => {
   });
 };
 
-export const postDataAPI = async (url: string, data: any) => {
+export const postDataAPI = async (url: string, data?: any) => {
   return await axios.post(`${baseURL}/api/${url}`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });

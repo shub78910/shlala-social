@@ -23,10 +23,8 @@ const DeleteModal = ({
 
   const deletePost = async () => {
     setLoading(true);
-    const res = await mutation.mutateAsync();
+    await mutation.mutateAsync();
     setLoading(false);
-    console.log({ res });
-
     router.push('/profile');
 
     setShowDeleteModal(false);

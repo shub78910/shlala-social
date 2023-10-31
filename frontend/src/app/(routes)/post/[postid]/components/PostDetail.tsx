@@ -1,6 +1,6 @@
 'use client';
 
-import Post from '@/app/(routes)/feed/components/Post';
+import Post from '@/components/post/Post';
 import Loader from '@/components/Loader';
 import When from '@/components/When';
 import { useAppDispatch } from '@/hooks/typeHooks';

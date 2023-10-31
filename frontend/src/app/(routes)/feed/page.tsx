@@ -1,6 +1,6 @@
 'use client';
 
-import Posts from '@/app/(routes)/feed/components/Posts';
+import Posts from '@/app/(routes)/feed/Posts';
 import FeedLayout from '@/components/layout/FeedLayout';
 
 const FeedPage = () => {

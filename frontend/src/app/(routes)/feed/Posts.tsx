@@ -1,14 +1,14 @@
 'use client';
 
-import Post from './Post';
+import Post from '../../../components/post/Post';
 import { useQuery } from '@tanstack/react-query';
 import { getDataAPI } from '@/utils/axiosCall';
 import { useAppDispatch } from '@/hooks/typeHooks';
 import { firstLoad } from '@/store/reducers/authSlice';
 import { useEffect } from 'react';
 import { setPosts } from '@/store/reducers/postSlice';
-import When from '../../../../components/When';
-import Loader from '../../../../components/Loader';
+import When from '../../../components/When';
+import Loader from '../../../components/Loader';
 const Posts = () => {
   const dispatch = useAppDispatch();
 

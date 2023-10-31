@@ -227,8 +227,6 @@ const postController = {
         },
       ]);
 
-      console.log({ post: post[0] });
-
       res.json({ post: post[0] });
     } catch (error) {
       console.error(error);

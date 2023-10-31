@@ -3,12 +3,13 @@ import { BiSolidLike } from 'react-icons/bi';
 import { BiCommentDetail } from 'react-icons/bi';
 import { BiSolidShareAlt } from 'react-icons/bi';
 import { FaEllipsisV } from 'react-icons/fa';
-import Button from '../../../../components/formComponents/Button';
+import Button from '../formComponents/Button';
 import When from '@/components/When';
 import { useState } from 'react';
 import { postMenus } from '@/static/postMenus';
-import DeleteModal from '@/components/feed/DeleteModal';
-import EditModal from '@/components/feed/EditModal';
+import DeleteModal from '@/components/post/DeleteModal';
+import EditModal from '@/components/post/EditModal';
+import LikeButton from './LikeButton';
 
 const Post = ({
   userName,
@@ -44,10 +45,6 @@ const Post = ({
     setShowOptions(false);
   };
 
-  const handleLikeClick = () => {
-    console.log('like');
-  };
-
   return (
     <div className="bg-gray-200 p-4 m-2 rounded-md shadow-md">
       <div className="flex items-start gap-2">
@@ -61,16 +58,13 @@ const Post = ({
       <Image src={image} alt="Post" width={500} height={500} className="mt-4 w-full object-cover rounded" />
       <div className="flex justify-between mt-4 relative">
         <div className="flex space-x-4">
-          <div className="flex gap-2 items-center">
-            <Button
-              {...{
-                onClick: handleLikeClick,
-              }}
-            >
-              <BiSolidLike size={20} color={`${userHasLiked ? 'blue' : 'black'}`} />
-            </Button>
-            <span className="text-lg font-medium">{likeCount}</span>
-          </div>
+          <LikeButton
+            {...{
+              userHasLiked,
+              likeCount,
+              _id,
+            }}
+          />
           <Button>
             <BiCommentDetail size={20} />
           </Button>
