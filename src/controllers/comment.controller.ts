@@ -1,6 +1,9 @@
-import { IReqAuth } from '../config/interface';
+import { IReqAuth, IUser } from '../config/interface';
 import Comment from '../models/comment.model';
 import { Response } from 'express';
+import { convertToObjectId } from '../utils/convertToObjectId';
+import Post from '../models/post.model';
+import User from '../models/user.model';
 
 const commentController = {
   addComment: async (req: IReqAuth, res: Response) => {
@@ -8,14 +11,16 @@ const commentController = {
       const {
         text,
         parentCommentId = null,
-        userId,
         postId,
       }: {
         text: string;
         parentCommentId: string | null;
-        userId: string;
         postId: string;
       } = req.body;
+
+      const userId = convertToObjectId(req.user?._id);
+
+      const userDetails: IUser | null = await User.findById(userId);
 
       if (parentCommentId) {
         // It's a reply, create a new comment with parentComment reference
@@ -26,17 +31,25 @@ const commentController = {
           postId,
         });
 
-        await newComment.save();
+        const savedComment = await newComment.save();
 
         // Update the parent comment to include the new reply
         await Comment.updateOne(
           { _id: parentCommentId },
           {
-            $push: { replies: newComment._id },
+            $push: { replies: savedComment._id },
           },
         );
 
-        res.json(newComment);
+        // Add the comment ID to the corresponding post model
+        await Post.updateOne(
+          { _id: postId },
+          {
+            $push: { comments: savedComment._id },
+          },
+        );
+
+        res.json({ savedComment, username: userDetails?.username, profilePicture: userDetails?.profilePicture });
       } else {
         // It's a top-level comment, create a new comment without parentComment reference
         const newComment = new Comment({
@@ -45,12 +58,20 @@ const commentController = {
           postId,
         });
 
-        await newComment.save();
+        const savedComment = await newComment.save();
 
-        // Todo:
-        // maybe we can save one or two comments in the post model as well, to show initially and then we can load more comments when the user clicks on the "load more comments" button
+        // Add the comment ID to the corresponding post model
+        await Post.updateOne(
+          { _id: postId },
+          {
+            $push: { comments: savedComment._id },
+          },
+        );
 
-        res.json(newComment);
+        res.json({
+          savedComment,
+          userDetails: { username: userDetails?.username, profilePicture: userDetails?.profilePicture },
+        });
       }
     } catch (error) {
       console.error(error);
@@ -90,6 +111,48 @@ const commentController = {
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error deleting a comment.' });
+    }
+  },
+
+  getCommentsByPostId: async (req: IReqAuth, res: Response) => {
+    try {
+      const postId = convertToObjectId(req.params.postId);
+
+      const commentsWithUserDetails: any = await Comment.aggregate([
+        {
+          $match: { postId: postId },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'userDetails',
+          },
+        },
+        {
+          $addFields: {
+            userDetails: {
+              $arrayElemAt: ['$userDetails', 0],
+            },
+          },
+        },
+        {
+          $project: {
+            'userDetails.username': 1,
+            'userDetails.profilePicture': 1,
+            text: 1,
+            createdAt: 1,
+            likes: 1,
+            parentComment: 1,
+          },
+        },
+      ]);
+
+      res.json(commentsWithUserDetails);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error getting comments.' });
     }
   },
 

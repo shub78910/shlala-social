@@ -1,11 +1,13 @@
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 
 const formatDate = (mongoDBDateString: string) => {
   const date = new Date(mongoDBDateString);
 
   const formattedDate = formatDistanceToNow(date, { addSuffix: true });
 
-  return formattedDate;
+  const time = format(date, 'h:mm a');
+
+  return `${formattedDate} at ${time}`;
 };
 
 export default formatDate;

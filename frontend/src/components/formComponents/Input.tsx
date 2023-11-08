@@ -18,7 +18,7 @@ const Input = ({
     <div className="input">
       <input
         name={name}
-        className={`py-2 pl-2 rounded-lg w-full border-none mb-2 ${className}`}
+        className={`py-2 pl-2 rounded-lg w-full border-none outline-none mb-2 ${className}`}
         placeholder={placeholder}
         {...rest}
       />

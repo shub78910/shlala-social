@@ -6,7 +6,7 @@ import When from '@/components/When';
 import { useAppDispatch } from '@/hooks/typeHooks';
 import { firstLoad } from '@/store/reducers/authSlice';
 import { getDataAPI } from '@/utils/axiosCall';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -15,6 +15,7 @@ function PostDetail() {
   const { postid } = params;
 
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     dispatch(firstLoad());
@@ -28,10 +29,17 @@ function PostDetail() {
     data: any;
     isLoading: boolean;
     refetch: any;
-  } = useQuery(['posts'], async () => await getDataAPI(`posts/${postid}`));
+  } = useQuery(['post'], async () => await getDataAPI(`posts/${postid}`), {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    queryClient.fetchQuery(['post']);
+  }, []);
 
   //@ts-ignore
-  const { post: { userName, userImage, caption, createdAt, image, likeCount, _id, userHasLiked } = {} } = data ?? {};
+  const { post: { userName, userImage, caption, createdAt, image, likeCount, commentCount, _id, userHasLiked } = {} } =
+    data ?? {};
 
   return (
     <div>
@@ -57,6 +65,7 @@ function PostDetail() {
             createdAt,
             image,
             likeCount,
+            commentCount,
             _id,
             userHasLiked,
             refetch,

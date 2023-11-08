@@ -27,10 +27,6 @@ const LikeButton = ({
     },
   };
 
-  // MAKING GREAT PROGRESS, KEEP GOING
-  // TOM, START WITH LOGOUT FEATURE, THEN COMMENT
-  // THEN MESSAGES!!
-
   const likeMutation = useMutation(async () => {
     await postDataAPI(`posts/like/${_id}`);
   }, afterMutation);

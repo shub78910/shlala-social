@@ -120,6 +120,9 @@ const postController = {
             likeCount: {
               $size: '$likes',
             },
+            commentCount: {
+              $size: '$comments',
+            },
           },
         },
       ]);
@@ -157,6 +160,9 @@ const postController = {
             },
             likeCount: {
               $size: '$likes',
+            },
+            commentCount: {
+              $size: '$comments',
             },
           },
         },
@@ -201,6 +207,9 @@ const postController = {
             likeCount: {
               $size: '$likes',
             },
+            commentCount: {
+              $size: '$comments',
+            },
           },
         },
       ]);
@@ -228,6 +237,9 @@ const postController = {
             },
             likeCount: {
               $size: '$likes',
+            },
+            commentCount: {
+              $size: '$comments',
             },
           },
         },

@@ -1,7 +1,7 @@
 'use client';
 
 import Post from '../../../components/post/Post';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getDataAPI } from '@/utils/axiosCall';
 import { useAppDispatch } from '@/hooks/typeHooks';
 import { firstLoad } from '@/store/reducers/authSlice';
@@ -11,6 +11,8 @@ import When from '../../../components/When';
 import Loader from '../../../components/Loader';
 const Posts = () => {
   const dispatch = useAppDispatch();
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     dispatch(firstLoad());
@@ -22,7 +24,13 @@ const Posts = () => {
   }: {
     data: any;
     isLoading: boolean;
-  } = useQuery(['posts'], async () => await getDataAPI(`posts/following/?offset=0&limit=10`));
+  } = useQuery(['posts'], async () => await getDataAPI(`posts/following/?offset=0&limit=10`), {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    queryClient.fetchQuery(['posts']);
+  }, []);
 
   if (data) {
     dispatch(setPosts(data.posts));

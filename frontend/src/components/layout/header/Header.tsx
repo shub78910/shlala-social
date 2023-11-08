@@ -5,7 +5,7 @@ import When from '@/components/When';
 
 const Header = ({ showHeaderMenus }: { showHeaderMenus: boolean }) => {
   return (
-    <div className="flex justify-between items-center sticky z-50 top-0 bg-gray-600 rounded-t-none rounded-b-lg">
+    <div className="flex justify-between items-center sticky z-50 top-0 bg-gray-700 rounded-t-none rounded-b-lg">
       <div className="flex items-center">
         <Image src={shlalaLogo} width={60} height={60} alt="shlalaLogo" />
         {/* // change styles */}

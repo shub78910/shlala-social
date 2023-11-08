@@ -10,6 +10,8 @@ import DeleteModal from '@/components/post/DeleteModal';
 import EditPostModal from '@/components/post/EditPostModal';
 import LikeButton from './LikeButton';
 import formatDate from '@/utils/formatDate';
+import CommentButton from './CommentButton';
+import CommentSection from './CommentSection';
 
 const Post = ({
   userName,
@@ -18,6 +20,7 @@ const Post = ({
   createdAt,
   image,
   likeCount,
+  commentCount,
   _id,
   userHasLiked,
   refetch,
@@ -28,6 +31,7 @@ const Post = ({
   createdAt: string;
   image: string;
   likeCount: number;
+  commentCount: number;
   _id: string;
   userHasLiked: boolean;
   refetch?: any;
@@ -35,6 +39,7 @@ const Post = ({
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [showCommentSection, setShowCommentSection] = useState<boolean>(false);
 
   const handleMoreOptionsClick = (menu: any) => {
     if (menu.type === 'DELETE') {
@@ -56,7 +61,7 @@ const Post = ({
       </div>
       <Image src={image} alt="Post" width={500} height={500} className="mt-4 w-full object-cover rounded" />
       <p className="mt-4">{caption}</p>
-      <div className="flex justify-between mt-4 relative z-0">
+      <div className="flex justify-between mt-4 relative z-30">
         <div className="flex space-x-4">
           <LikeButton
             {...{
@@ -65,9 +70,14 @@ const Post = ({
               _id,
             }}
           />
-          <Button>
-            <BiCommentDetail size={20} />
-          </Button>
+          <CommentButton
+            {...{
+              commentCount,
+              setShowCommentSection,
+              showCommentSection,
+              _id,
+            }}
+          />
           <Button>
             <BiSolidShareAlt size={20} />
           </Button>
@@ -79,6 +89,7 @@ const Post = ({
         >
           <FaEllipsisV size={20} />
         </Button>
+
         <When isTrue={showOptions}>
           <div className="bg-gray-800 absolute -right-40 bottom-12 z-30  text-white w-1/3 rounded-md">
             {postMenus.map((menu, index) => {
@@ -113,6 +124,15 @@ const Post = ({
           />
         </When>
       </div>
+      <When isTrue={showCommentSection}>
+        <div>
+          <CommentSection
+            {...{
+              _id,
+            }}
+          />
+        </div>
+      </When>
     </div>
   );
 };

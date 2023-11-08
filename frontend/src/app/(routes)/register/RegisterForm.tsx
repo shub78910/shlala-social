@@ -43,11 +43,11 @@ const RegisterForm = () => {
             render={({ field }) => (
               <Input
                 className="w-full"
-                {...field}
                 placeholder="Enter Email"
                 {...{
                   name: 'email',
                 }}
+                {...field}
                 errors={formState.errors}
               />
             )}
