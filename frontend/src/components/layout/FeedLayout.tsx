@@ -3,7 +3,6 @@
 import FooterMenus from '@/components/layout/FooterMenus';
 import MasterLayout from '@/components/layout/MasterLayout';
 import SidebarMenus from '@/components/layout/SidebarMenus';
-import { useState } from 'react';
 
 const FeedLayout = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -5,6 +5,8 @@ import Button from '@/components/formComponents/Button';
 import ButtonWithSpinner from '@/components/formComponents/ButtonWithSpinner';
 import Input from '@/components/formComponents/Input';
 import TextArea from '@/components/formComponents/TextArea';
+import { useAppDispatch } from '@/hooks/typeHooks';
+import { updateUser } from '@/store/reducers/authSlice';
 import { patchDataAPI, postDataAPI } from '@/utils/axiosCall';
 import { uploadImage } from '@/utils/uploadImage';
 import { useMutation } from '@tanstack/react-query';
@@ -32,16 +34,27 @@ const EditProfileModal = ({
     formState: { errors },
   } = useForm();
 
+  const dispatch = useAppDispatch();
+
   const [loading, setLoading] = useState(false);
 
   const [imageSrc, setImageSrc] = useState<string>(profilePicture); // only for preview
   const [images, setImages] = useState<any>([]); // to send to uploadImage func
 
-  const mutation = useMutation(
-    ({ username, profilePicture, bio }: { username: string; profilePicture?: string; bio: string }) => {
-      return patchDataAPI('user/editUser', { username, profilePicture, bio });
+  const mutation = useMutation({
+    mutationFn: async ({
+      username,
+      profilePicture,
+      bio,
+    }: {
+      username: string;
+      profilePicture?: string;
+      bio: string;
+    }) => {
+      const userDetails = await patchDataAPI('user/editUser', { username, profilePicture, bio });
+      updateUser(userDetails.data);
     },
-  );
+  });
 
   const onSubmit = async (data: any) => {
     setLoading(true);
@@ -51,7 +64,7 @@ const EditProfileModal = ({
       res = await uploadImage(images[0]);
     }
 
-    // add condition to see if any data is changed
+    // todo: add condition to see if any data is changed
 
     await mutation.mutateAsync({
       bio: data.bio,
@@ -72,7 +85,6 @@ const EditProfileModal = ({
       <div>
         <div className="text-xl font-semibold mb-4">Edit Your Profile</div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <div className="flex justify-center"> */}
           <div className="mb-4 flex flex-col items-center">
             <label htmlFor="profileImage" className="block font-semibold text-gray-300 mb-2">
               Profile Image
@@ -97,7 +109,6 @@ const EditProfileModal = ({
                 />
               )}
             />
-            {/* </div> */}
           </div>
           <div className="mb-4">
             <label htmlFor="username" className="block font-semibold text-gray-300 mb-2">

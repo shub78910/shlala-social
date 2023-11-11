@@ -26,8 +26,6 @@ const ButtonWithSpinner = ({
             {...{
               height: '20',
               width: '20',
-              radius: 1,
-              color: '#f8fafc',
             }}
           />
         </div>

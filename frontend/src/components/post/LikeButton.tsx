@@ -1,38 +1,40 @@
 import { BiSolidLike } from 'react-icons/bi';
 import Button from '../formComponents/Button';
 import { useMutation } from '@tanstack/react-query';
-import { postDataAPI } from '@/utils/axiosCall';
+import { patchDataAPI } from '@/utils/axiosCall';
 import { useState } from 'react';
 
 const LikeButton = ({
   userHasLiked: initialUserHasLiked,
   likeCount: initialLikeCount,
   _id,
+  likeContext,
 }: {
   userHasLiked: boolean;
   likeCount: number;
   _id: string;
+  likeContext: string;
 }) => {
-  const [userHasLiked, setUserHasLiked] = useState(initialUserHasLiked);
+  const [isLiked, setIsLiked] = useState(initialUserHasLiked);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
 
   const afterMutation = {
     onMutate: () => {
-      setLikeCount((prevCount) => (userHasLiked ? prevCount - 1 : prevCount + 1));
-      setUserHasLiked(!userHasLiked);
+      setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
+      setIsLiked(!isLiked);
     },
     onError: () => {
       setLikeCount(initialLikeCount);
-      setUserHasLiked(initialUserHasLiked);
+      setIsLiked(initialUserHasLiked);
     },
   };
 
   const likeMutation = useMutation(async () => {
-    await postDataAPI(`posts/like/${_id}`);
+    await patchDataAPI(`${likeContext}/like/${_id}`, {});
   }, afterMutation);
 
   const unlikeMutation = useMutation(async () => {
-    await postDataAPI(`posts/unlike/${_id}`);
+    await patchDataAPI(`${likeContext}/unlike/${_id}`, {});
   }, afterMutation);
 
   const handleLikeClick = () => {
@@ -40,7 +42,7 @@ const LikeButton = ({
       return;
     }
 
-    if (userHasLiked) {
+    if (isLiked) {
       unlikeMutation.mutateAsync();
     } else {
       likeMutation.mutateAsync();
@@ -54,7 +56,7 @@ const LikeButton = ({
           onClick: handleLikeClick,
         }}
       >
-        <BiSolidLike size={20} color={`${userHasLiked ? 'blue' : 'black'}`} />
+        <BiSolidLike size={20} color={`${isLiked ? 'blue' : 'black'}`} />
       </Button>
       <span className="text-lg font-medium">{likeCount}</span>
     </div>

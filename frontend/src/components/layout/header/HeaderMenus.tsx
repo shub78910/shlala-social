@@ -1,3 +1,5 @@
+'use client';
+import Loader from '@/components/Loader';
 import When from '@/components/When';
 import Button from '@/components/formComponents/Button';
 import { useAppDispatch, useAppSelector } from '@/hooks/typeHooks';
@@ -27,11 +29,27 @@ const HeaderMenus = () => {
       className="flex justify-center items-center gap-2 text-white cursor-pointer relative"
       onClick={() => setShowMenuList(!showMenuList)}
     >
-      <div>
-        <Image src={user?.profilePicture || ''} width={40} height={40} className="rounded-full" alt="profile" />
-      </div>
-      <div className="hidden md:block">{user?.username}</div>
-      <RiArrowDropDownLine size={30} />
+      <When isTrue={!user}>
+        <Loader
+          {...{
+            height: '30',
+            width: '30',
+          }}
+        />
+      </When>
+      <When isTrue={!!user}>
+        <div>
+          <Image
+            src={user?.profilePicture || ''}
+            width={40}
+            height={40}
+            className="rounded-full object-contain border-white border border-solid"
+            alt="profile"
+          />
+        </div>
+        <div className="hidden md:block">{user?.username}</div>
+        <RiArrowDropDownLine size={30} />
+      </When>
 
       <When isTrue={showMenuList}>
         <div className="bg-gray-800 absolute top-12 right-0 text-white w-40 rounded-md z-50">

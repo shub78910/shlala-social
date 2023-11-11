@@ -75,7 +75,7 @@ const userController = {
 
       await User.findByIdAndUpdate(loggedInUserId, { username, profilePicture, bio });
 
-      res.json({ message: 'User updated.' });
+      res.json({ username, profilePicture, bio });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error updating the user.' });

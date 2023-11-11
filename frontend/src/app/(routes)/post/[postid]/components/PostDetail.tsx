@@ -17,10 +17,6 @@ function PostDetail() {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    dispatch(firstLoad());
-  }, []);
-
   const {
     data: { data } = {},
     isLoading,
@@ -34,40 +30,23 @@ function PostDetail() {
   });
 
   useEffect(() => {
+    dispatch(firstLoad());
+
     queryClient.fetchQuery(['post']);
   }, []);
-
-  //@ts-ignore
-  const { post: { userName, userImage, caption, createdAt, image, likeCount, commentCount, _id, userHasLiked } = {} } =
-    data ?? {};
 
   return (
     <div>
       <When isTrue={isLoading}>
         <div className="flex justify-center">
-          <Loader
-            {...{
-              height: '100',
-              width: '100',
-              radius: 1,
-              color: '#f8fafc',
-            }}
-          />
+          <Loader />
         </div>
       </When>
 
       <When isTrue={!isLoading}>
         <Post
           {...{
-            userName,
-            userImage,
-            caption,
-            createdAt,
-            image,
-            likeCount,
-            commentCount,
-            _id,
-            userHasLiked,
+            ...data?.post,
             refetch,
           }}
         />

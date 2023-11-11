@@ -39,14 +39,7 @@ const Explore = () => {
     <div className="flex justify-center space-x-4">
       <When isTrue={isLoading}>
         <div className="text-center flex justify-center items-center mt-32">
-          <Loader
-            {...{
-              height: '100',
-              width: '100',
-              radius: 1,
-              color: '#f8fafc',
-            }}
-          />
+          <Loader />
         </div>
       </When>
       <When isTrue={!isLoading}>

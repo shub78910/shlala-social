@@ -12,34 +12,35 @@ import LikeButton from './LikeButton';
 import formatDate from '@/utils/formatDate';
 import CommentButton from './CommentButton';
 import CommentSection from './CommentSection';
+import { useAppSelector } from '@/hooks/typeHooks';
 
 const Post = ({
-  userName,
-  userImage,
-  caption,
-  createdAt,
-  image,
-  likeCount,
-  commentCount,
-  _id,
-  userHasLiked,
+  postDetails,
+  userDetails,
   refetch,
 }: {
-  userName: string;
-  userImage: string;
-  caption: string;
-  createdAt: string;
-  image: string;
-  likeCount: number;
-  commentCount: number;
-  _id: string;
-  userHasLiked: boolean;
+  postDetails: {
+    userId: string;
+    caption: string;
+    createdAt: string;
+    image: string;
+    likeCount: number;
+    commentCount: number;
+    _id: string;
+    userHasLiked: boolean;
+  };
+  userDetails: {
+    username: string;
+    profilePicture: string;
+  };
   refetch?: any;
 }) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showCommentSection, setShowCommentSection] = useState<boolean>(false);
+
+  const { user: loggedInUser } = useAppSelector((state) => state.user);
 
   const handleMoreOptionsClick = (menu: any) => {
     if (menu.type === 'DELETE') {
@@ -50,12 +51,15 @@ const Post = ({
     setShowOptions(false);
   };
 
+  const { username, profilePicture: userImage } = userDetails;
+  const { caption, createdAt, image, likeCount, commentCount, _id, userHasLiked, userId } = postDetails;
+
   return (
     <div className="bg-gray-200 p-4 m-2 rounded-md shadow-md">
       <div className="flex items-start gap-2">
-        <Image src={userImage} alt={userName} height={40} width={40} className="rounded-full object-cover" />
+        <Image src={userImage} alt={username} height={40} width={40} className="rounded-full object-cover" />
         <div>
-          <div className="font-bold">{userName}</div>
+          <div className="font-bold">{username}</div>
           <div className="text-gray-500 mt-1">{formatDate(createdAt)}</div>
         </div>
       </div>
@@ -68,6 +72,7 @@ const Post = ({
               userHasLiked,
               likeCount,
               _id,
+              likeContext: 'post',
             }}
           />
           <CommentButton
@@ -82,13 +87,15 @@ const Post = ({
             <BiSolidShareAlt size={20} />
           </Button>
         </div>
-        <Button
-          {...{
-            onClick: () => setShowOptions(!showOptions),
-          }}
-        >
-          <FaEllipsisV size={20} />
-        </Button>
+        <When isTrue={loggedInUser?._id === userId}>
+          <Button
+            {...{
+              onClick: () => setShowOptions(!showOptions),
+            }}
+          >
+            <FaEllipsisV size={20} />
+          </Button>
+        </When>
 
         <When isTrue={showOptions}>
           <div className="bg-gray-800 absolute -right-40 bottom-12 z-30  text-white w-1/3 rounded-md">

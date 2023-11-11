@@ -1,4 +1,4 @@
-import { IReqAuth, IUser } from '../config/interface';
+import { IReqAuth, IUser, objectId } from '../config/interface';
 import Comment from '../models/comment.model';
 import { Response } from 'express';
 import { convertToObjectId } from '../utils/convertToObjectId';
@@ -70,7 +70,7 @@ const commentController = {
 
         res.json({
           savedComment,
-          userDetails: { username: userDetails?.username, profilePicture: userDetails?.profilePicture },
+          userDetails: { username: userDetails?.username, profilePicture: userDetails?.profilePicture, _id: userId },
         });
       }
     } catch (error) {
@@ -84,13 +84,19 @@ const commentController = {
       const commentId = req.params.commentId;
       const newText = req.body.text;
 
+      const userId = convertToObjectId(req.user?._id);
+      const userDetails: IUser | null = await User.findById(userId);
+
       const updatedComment = await Comment.findByIdAndUpdate(commentId, { text: newText }, { new: true });
 
       if (!updatedComment) {
         return res.status(404).json({ message: 'Comment not found.' });
       }
 
-      res.json(updatedComment);
+      res.json({
+        updatedComment,
+        userDetails: { username: userDetails?.username, profilePicture: userDetails?.profilePicture, _id: userId },
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error editing comment.' });
@@ -117,6 +123,7 @@ const commentController = {
   getCommentsByPostId: async (req: IReqAuth, res: Response) => {
     try {
       const postId = convertToObjectId(req.params.postId);
+      const userId = convertToObjectId(req.user?._id);
 
       const commentsWithUserDetails: any = await Comment.aggregate([
         {
@@ -135,12 +142,17 @@ const commentController = {
             userDetails: {
               $arrayElemAt: ['$userDetails', 0],
             },
+            isLiked: {
+              $in: [userId, '$likes'],
+            },
           },
         },
         {
           $project: {
             'userDetails.username': 1,
             'userDetails.profilePicture': 1,
+            'userDetails._id': 1,
+            isLiked: 1,
             text: 1,
             createdAt: 1,
             likes: 1,
@@ -156,8 +168,33 @@ const commentController = {
     }
   },
 
-  // Todo:
-  // like a comment
+  likeComment: async (req: IReqAuth, res: Response) => {
+    try {
+      const commentId: string = req.params.commentId;
+      const userId: objectId = req.user?._id;
+
+      await Comment.findByIdAndUpdate(commentId, { $addToSet: { likes: userId } });
+
+      res.json({ message: 'Comment liked.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error liking comment.' });
+    }
+  },
+
+  unlikeComment: async (req: IReqAuth, res: Response) => {
+    try {
+      const commentId: string = req.params.commentId;
+      const userId: objectId = req.user?._id;
+
+      await Comment.findByIdAndUpdate(commentId, { $pull: { likes: userId } });
+
+      res.json({ message: 'Comment liked.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error liking comment.' });
+    }
+  },
 };
 
 export default commentController;

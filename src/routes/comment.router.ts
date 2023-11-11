@@ -10,4 +10,7 @@ commentRouter.patch('/comment/:commentId', authMiddleware, commentController.edi
 commentRouter.delete('/comment/:commentId', authMiddleware, commentController.deleteComment);
 commentRouter.get('/comment/:postId', authMiddleware, commentController.getCommentsByPostId);
 
+commentRouter.patch('/comment/like/:commentId', authMiddleware, commentController.likeComment);
+commentRouter.patch('/comment/unlike/:commentId', authMiddleware, commentController.unlikeComment);
+
 export default commentRouter;

@@ -48,14 +48,7 @@ const ProfilePage = () => {
     <div className="max-w-4xl mx-auto text-white bg-gray-700 rounded">
       <When isTrue={isLoading}>
         <div className="flex justify-center">
-          <Loader
-            {...{
-              height: '100',
-              width: '100',
-              radius: 1,
-              color: '#f8fafc',
-            }}
-          />
+          <Loader />
         </div>
       </When>
       <When isTrue={!isLoading}>

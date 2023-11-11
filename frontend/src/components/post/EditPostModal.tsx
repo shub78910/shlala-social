@@ -43,6 +43,7 @@ const EditPostModal = ({
 
     await mutation.mutateAsync({ caption: data.caption });
     setLoading(false);
+    // todo: instead of this refetch, use the queryClient to update the cache
     refetch();
 
     setShowEditModal(false);
@@ -66,7 +67,7 @@ const EditPostModal = ({
                 errors={errors}
                 name="caption"
                 {...{
-                  className: 'w-full mt-4 p-1 outline-none',
+                  className: 'mt-4',
                 }}
               />
             )}
@@ -75,7 +76,7 @@ const EditPostModal = ({
       </form>
       <div className="flex justify-end gap-4">
         <Button
-          className="bg-gray-200 text-gray-700 px-4 py-2"
+          className="bg-neutral-500 hover:bg-neutral-700 text-white px-4 py-2"
           {...{
             onClick: () => setShowEditModal(false),
           }}
@@ -83,7 +84,7 @@ const EditPostModal = ({
           No
         </Button>
         <ButtonWithSpinner
-          className="bg-gray-400 text-gray-700 px-4 py-2"
+          className="bg-neutral-600 hover:bg-neutral-700 text-white px-4 py-2"
           {...{
             onClick: handleSubmit(onSubmit),
             spinner: loading,

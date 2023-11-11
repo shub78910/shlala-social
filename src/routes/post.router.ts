@@ -15,8 +15,8 @@ postRouter.get('/posts/user/:userId', authMiddleware, postController.getPostsByU
 postRouter.get('/posts/following', authMiddleware, postController.getPostByFollowing);
 postRouter.get('/posts/:postId', authMiddleware, postController.getPostById);
 
-postRouter.post('/posts/like/:postId', authMiddleware, postController.like);
-postRouter.post('/posts/unlike/:postId', authMiddleware, postController.unlike);
+postRouter.patch('/posts/like/:postId', authMiddleware, postController.like);
+postRouter.patch('/posts/unlike/:postId', authMiddleware, postController.unlike);
 
 postRouter.get('/posts/comments/:postId', authMiddleware, postController.getCommentsForPost);
 export default postRouter;

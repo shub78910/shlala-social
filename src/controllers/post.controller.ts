@@ -23,8 +23,6 @@ const postController = {
         caption,
         image,
         userId: req.user?._id,
-        userName: req.user?.username,
-        userImage: req.user?.profilePicture,
       });
 
       const savedPost = await newPost.save();
@@ -98,8 +96,8 @@ const postController = {
         {
           $match: {
             $nor: [
-              { user: loggedInUserId }, // Exclude your own posts
-              { user: { $in: req.user?.following ?? [] } }, // Exclude posts from users you follow
+              { userId: loggedInUserId }, // Exclude your own posts
+              { userId: { $in: req.user?.following ?? [] } }, // Exclude posts from users you follow
             ],
           },
         },
@@ -123,6 +121,28 @@ const postController = {
             commentCount: {
               $size: '$comments',
             },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'userDetails',
+          },
+        },
+        {
+          $addFields: {
+            userDetails: {
+              $arrayElemAt: ['$userDetails', 0],
+            },
+          },
+        },
+        {
+          $project: {
+            'userDetails.username': 1,
+            'userDetails.profilePicture': 1,
+            postDetails: '$$ROOT',
           },
         },
       ]);
@@ -164,6 +184,28 @@ const postController = {
             commentCount: {
               $size: '$comments',
             },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'userDetails',
+          },
+        },
+        {
+          $addFields: {
+            userDetails: {
+              $arrayElemAt: ['$userDetails', 0],
+            },
+          },
+        },
+        {
+          $project: {
+            'userDetails.username': 1,
+            'userDetails.profilePicture': 1,
+            postDetails: '$$ROOT',
           },
         },
       ]);
@@ -212,6 +254,28 @@ const postController = {
             },
           },
         },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'userDetails',
+          },
+        },
+        {
+          $addFields: {
+            userDetails: {
+              $arrayElemAt: ['$userDetails', 0],
+            },
+          },
+        },
+        {
+          $project: {
+            'userDetails.username': 1,
+            'userDetails.profilePicture': 1,
+            postDetails: '$$ROOT',
+          },
+        },
       ]);
 
       res.json({ posts });
@@ -241,6 +305,28 @@ const postController = {
             commentCount: {
               $size: '$comments',
             },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'userDetails',
+          },
+        },
+        {
+          $addFields: {
+            userDetails: {
+              $arrayElemAt: ['$userDetails', 0],
+            },
+          },
+        },
+        {
+          $project: {
+            'userDetails.username': 1,
+            'userDetails.profilePicture': 1,
+            postDetails: '$$ROOT',
           },
         },
       ]);

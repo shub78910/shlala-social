@@ -100,6 +100,9 @@ export const loginUser = (userData: ILogin) => {
 
       localStorage.setItem('token', res.data.user.accessToken);
       localStorage.setItem('user', JSON.stringify(res.data.user));
+
+      dispatch(setUser(res.data.user));
+
       dispatch(loginUserResponse(res.data.user));
     } catch (error: any) {
       dispatch(loginUserError(formatError(error)));
@@ -118,6 +121,11 @@ export const firstLoad = () => {
   return (dispatch: (data: object) => void) => {
     dispatch(setUser(userDetails));
   };
+};
+
+export const updateUser = (userData: IUser) => {
+  const localStorageUserDetails = JSON.parse(localStorage.getItem('user') ?? '');
+  localStorage.setItem('user', JSON.stringify({ ...localStorageUserDetails, ...userData }));
 };
 
 export default userSlice.reducer;
