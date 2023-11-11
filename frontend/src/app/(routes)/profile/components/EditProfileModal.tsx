@@ -1,4 +1,5 @@
 import { ImageUploadResponse } from '@/Interface';
+import { apiCall } from '@/api/apiCall';
 import ImageUploader from '@/components/ImageUploader';
 import Modal from '@/components/Modal';
 import Button from '@/components/formComponents/Button';
@@ -57,22 +58,25 @@ const EditProfileModal = ({
   });
 
   const onSubmit = async (data: any) => {
-    setLoading(true);
+    apiCall({
+      fn: async () => {
+        let res: ImageUploadResponse | undefined;
+        if (images[0]) {
+          res = await uploadImage(images[0]);
+        }
 
-    let res: ImageUploadResponse | undefined;
-    if (images[0]) {
-      res = await uploadImage(images[0]);
-    }
+        // todo: add condition to see if any data is changed
 
-    // todo: add condition to see if any data is changed
-
-    await mutation.mutateAsync({
-      bio: data.bio,
-      username: data.username,
-      ...(res !== undefined && { profilePicture: res.url }),
+        await mutation.mutateAsync({
+          bio: data.bio,
+          username: data.username,
+          ...(res !== undefined && { profilePicture: res.url }),
+        });
+        refetch();
+      },
+      setLoading,
     });
-    setLoading(false);
-    refetch();
+
     setModalOpen(false);
   };
 

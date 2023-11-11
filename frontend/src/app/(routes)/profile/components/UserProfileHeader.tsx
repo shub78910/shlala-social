@@ -3,19 +3,24 @@ import Button from '@/components/formComponents/Button';
 import Image from 'next/image';
 import { useState } from 'react';
 import EditProfileModal from './EditProfileModal';
+import { useAppSelector } from '@/hooks/typeHooks';
+import FollowButton from '@/components/profile/FollowButton';
 
 const UserProfileHeader = ({
   userName,
   bio,
   profilePicture,
   refetch,
+  profileId,
 }: {
   userName: string;
   bio: string;
   profilePicture: string;
   refetch: any;
+  profileId: string;
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const { user } = useAppSelector((state) => state.user);
 
   return (
     <div className="p-2 px-4">
@@ -33,14 +38,24 @@ const UserProfileHeader = ({
           <h1 className="text-2xl font-semibold">{userName}</h1>
         </div>
         <div>
-          <Button
-            className="bg-gray-800 hover:bg-gray-900 text-white"
-            {...{
-              onClick: () => setModalOpen(true),
-            }}
-          >
-            Edit Profile
-          </Button>
+          <When isTrue={profileId === user?._id}>
+            <Button
+              className="bg-gray-800 hover:bg-gray-900 text-white"
+              {...{
+                onClick: () => setModalOpen(true),
+              }}
+            >
+              Edit Profile
+            </Button>
+          </When>
+
+          <When isTrue={profileId !== user?._id}>
+            <FollowButton
+              {...{
+                profileId,
+              }}
+            />
+          </When>
         </div>
 
         <When isTrue={isModalOpen}>

@@ -13,6 +13,7 @@ import { setSelectedMenu } from '@/store/reducers/miscSlice';
 const SidebarMenus = () => {
   const router = useRouter();
   const [isModalOpen, setModalOpen] = useState(false);
+  const { user } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
 
@@ -20,7 +21,11 @@ const SidebarMenus = () => {
 
   const handleClick = (menu: any) => {
     dispatch(setSelectedMenu(menu.text));
-    router.push(menu.path);
+    if (menu.path === '/profile') {
+      router.push(`${menu.path}/${user?._id}`);
+    } else {
+      router.push(menu.path);
+    }
   };
 
   return (

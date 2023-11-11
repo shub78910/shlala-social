@@ -8,6 +8,7 @@ import { firstLoad } from '@/store/reducers/authSlice';
 import { useEffect } from 'react';
 import When from '@/components/When';
 import Loader from '@/components/Loader';
+import { useParams } from 'next/navigation';
 
 const ProfilePage = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +16,9 @@ const ProfilePage = () => {
   useEffect(() => {
     dispatch(firstLoad());
   }, []);
+
+  const params = useParams();
+  const profileId = params.profileId as string;
 
   const { user } = useAppSelector((state) => state.user);
 
@@ -30,7 +34,7 @@ const ProfilePage = () => {
     ['user', user?._id],
     async () => {
       if (user?._id) {
-        return await getDataAPI(`user/getUser/${user._id}`);
+        return await getDataAPI(`user/getUser/${profileId}`);
       }
     },
     {
@@ -58,6 +62,7 @@ const ProfilePage = () => {
             profilePicture: profilePicture,
             userName: username,
             refetch,
+            profileId,
           }}
         />
         <UserStats

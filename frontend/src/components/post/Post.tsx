@@ -13,6 +13,7 @@ import formatDate from '@/utils/formatDate';
 import CommentButton from './CommentButton';
 import CommentSection from './CommentSection';
 import { useAppSelector } from '@/hooks/typeHooks';
+import { useRouter } from 'next/navigation';
 
 const Post = ({
   postDetails,
@@ -42,6 +43,8 @@ const Post = ({
 
   const { user: loggedInUser } = useAppSelector((state) => state.user);
 
+  const router = useRouter();
+
   const handleMoreOptionsClick = (menu: any) => {
     if (menu.type === 'DELETE') {
       setShowDeleteModal(true);
@@ -51,12 +54,16 @@ const Post = ({
     setShowOptions(false);
   };
 
+  const navigateToProfile = () => {
+    router.push(`/profile/${userId}`);
+  };
+
   const { username, profilePicture: userImage } = userDetails;
   const { caption, createdAt, image, likeCount, commentCount, _id, userHasLiked, userId } = postDetails;
 
   return (
     <div className="bg-gray-200 p-4 m-2 rounded-md shadow-md">
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2 cursor-pointer" onClick={navigateToProfile}>
         <Image src={userImage} alt={username} height={40} width={40} className="rounded-full object-cover" />
         <div>
           <div className="font-bold">{username}</div>
@@ -83,7 +90,13 @@ const Post = ({
               _id,
             }}
           />
-          <Button>
+          <Button
+            {...{
+              onClick: () => {
+                navigator.clipboard.writeText(`${window.location.origin}/post/${_id}`);
+              },
+            }}
+          >
             <BiSolidShareAlt size={20} />
           </Button>
         </div>
