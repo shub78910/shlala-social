@@ -56,9 +56,9 @@ const LikeButton = ({
           onClick: handleLikeClick,
         }}
       >
-        <BiSolidLike size={20} color={`${isLiked ? 'blue' : 'black'}`} />
+        <BiSolidLike size={20} className={`${isLiked ? 'text-blue-500' : 'text-black'}`} />
       </Button>
-      <span className="text-lg font-medium">{likeCount}</span>
+      <span className="text-lg font-medium">{likeCount === 0 ? '' : likeCount}</span>
     </div>
   );
 };

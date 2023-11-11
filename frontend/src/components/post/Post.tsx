@@ -72,7 +72,7 @@ const Post = ({
               userHasLiked,
               likeCount,
               _id,
-              likeContext: 'post',
+              likeContext: 'posts',
             }}
           />
           <CommentButton
