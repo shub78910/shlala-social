@@ -25,13 +25,6 @@ const postController = {
         userId: req.user?._id,
       });
 
-      console.log({
-        caption,
-        image,
-        userId: req.user?._id,
-        newPost,
-      });
-
       const savedPost = await newPost.save();
 
       await User.findByIdAndUpdate(req.user?._id, { $push: { posts: savedPost._id } }, { new: true });
