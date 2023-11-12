@@ -12,12 +12,16 @@ const UserProfileHeader = ({
   profilePicture,
   refetch,
   profileId,
+  isFollowing,
+  setIsFollowing,
 }: {
   userName: string;
   bio: string;
   profilePicture: string;
   refetch: any;
   profileId: string;
+  isFollowing: boolean;
+  setIsFollowing: any;
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const { user } = useAppSelector((state) => state.user);
@@ -53,6 +57,8 @@ const UserProfileHeader = ({
             <FollowButton
               {...{
                 profileId,
+                isFollowing,
+                setIsFollowing,
               }}
             />
           </When>

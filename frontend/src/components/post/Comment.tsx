@@ -78,7 +78,6 @@ const Comment: React.FC<CommentProps> = ({ comment, loading, setLoading, postId,
         return existingData;
       });
 
-      // Return a context object with the snapshot
       return { previousData };
     },
     onError: (err, variables, context) => {

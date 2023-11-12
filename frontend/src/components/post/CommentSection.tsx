@@ -86,14 +86,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ _id: postId }) => {
     }
   };
 
-  // remove: NEXT THINGS TO BE DONE WOULD BE
-  // LIKE, EDIT AND DELETE COMMENT doneeeeee
-  // SHOW THE MENU ONLY TO PEOPLE WHO HAVE COMMENTED THEM done
-
-  // THEN MOVE 0N TO MAKING THE USER DETAIL PAGE
-  // FOLLOW UNFOLLOW
-  // THEN MESSAGE
-
   return (
     <div>
       <When isTrue={isLoading}>

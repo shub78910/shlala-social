@@ -19,12 +19,13 @@ const userController = {
         return res.status(404).json({ message: 'User not found.' });
       }
 
-      if (userToFollow.followers.includes(loggedInUserId)) {
+      const isAlreadyFollowing = userToFollow.followers.includes(loggedInUserId);
+
+      if (isAlreadyFollowing) {
         return res.status(400).json({ message: 'You are already following this user.' });
       }
 
       await User.findByIdAndUpdate(userId, { $addToSet: { followers: loggedInUserId } });
-
       await User.findByIdAndUpdate(loggedInUserId, { $addToSet: { following: userId } });
 
       res.json({ message: 'You are now following the user.' });
@@ -44,7 +45,9 @@ const userController = {
         return res.status(404).json({ message: 'User not found.' });
       }
 
-      if (!userToUnfollow.followers.includes(loggedInUserId)) {
+      const isFollowing = userToUnfollow.followers.includes(loggedInUserId);
+
+      if (!isFollowing) {
         return res.status(400).json({ message: 'You are not following this user.' });
       }
 
@@ -85,12 +88,15 @@ const userController = {
   getUser: async (req: IReqAuth, res: Response) => {
     try {
       const userId = convertToObjectId(req.params.userId);
+      const loggedInUserId: objectId = convertToObjectId(req.user?._id);
 
       const user = await User.findById(userId).select('-password');
 
       if (!user) {
         return res.status(404).json({ message: 'User not found.' });
       }
+
+      const isFollowing = user.followers.includes(loggedInUserId);
 
       const posts = await Post.aggregate([
         {
@@ -99,17 +105,9 @@ const userController = {
         {
           $sort: { createdAt: -1 },
         },
-
-        {
-          $addFields: {
-            userHasLiked: {
-              $in: [userId, '$likes'],
-            },
-          },
-        },
       ]);
 
-      res.json({ user, posts });
+      res.json({ user, isFollowing, posts });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error fetching the user.' });

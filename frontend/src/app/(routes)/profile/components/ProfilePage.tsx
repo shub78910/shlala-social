@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getDataAPI } from '@/utils/axiosCall';
 import { useAppDispatch, useAppSelector } from '@/hooks/typeHooks';
 import { firstLoad } from '@/store/reducers/authSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import When from '@/components/When';
 import Loader from '@/components/Loader';
 import { useParams } from 'next/navigation';
@@ -20,6 +20,8 @@ const ProfilePage = () => {
   const params = useParams();
   const profileId = params.profileId as string;
 
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+
   const { user } = useAppSelector((state) => state.user);
 
   const {
@@ -31,22 +33,22 @@ const ProfilePage = () => {
     data: any;
     refetch: any;
   } = useQuery(
-    ['user', user?._id],
+    ['user'],
     async () => {
-      if (user?._id) {
-        return await getDataAPI(`user/getUser/${profileId}`);
-      }
+      return await getDataAPI(`user/getUser/${profileId}`);
     },
     {
-      enabled: !!user?._id,
-      retry: 1,
+      retry: 3,
     },
   );
 
   // @ts-ignore
   const { data: { user: { bio, profilePicture, username, followers, following } = {} } = {} } = userData || {};
-  // @ts-ignore
-  const { data: { posts } = {} } = userData || {};
+  const posts = userData?.data?.posts;
+
+  useEffect(() => {
+    setIsFollowing(userData?.data?.isFollowing);
+  }, [userData?.data?.isFollowing]);
 
   return (
     <div className="max-w-4xl mx-auto text-white bg-gray-700 rounded">
@@ -63,6 +65,8 @@ const ProfilePage = () => {
             userName: username,
             refetch,
             profileId,
+            isFollowing,
+            setIsFollowing,
           }}
         />
         <UserStats
