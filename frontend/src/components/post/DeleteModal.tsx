@@ -5,6 +5,7 @@ import ButtonWithSpinner from '../formComponents/ButtonWithSpinner';
 import { useMutation } from '@tanstack/react-query';
 import { deleteDataAPI } from '@/utils/axiosCall';
 import { useState } from 'react';
+import { useAppSelector } from '@/hooks/typeHooks';
 
 const DeleteModal = ({
   setShowDeleteModal,
@@ -16,6 +17,7 @@ const DeleteModal = ({
   const router = useRouter();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const { user } = useAppSelector((state) => state.user);
 
   const mutation = useMutation(() => {
     return deleteDataAPI(`post/${_id}`);
@@ -25,7 +27,7 @@ const DeleteModal = ({
     setLoading(true);
     await mutation.mutateAsync();
     setLoading(false);
-    router.push('/profile');
+    router.push(`/profile/${user?._id}`);
 
     setShowDeleteModal(false);
   };

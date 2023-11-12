@@ -5,6 +5,7 @@ import When from '../When';
 import Header from './header/Header';
 import ReduxProvider from '@/store/ReduxProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import FooterMenus from './FooterMenus';
 
 const MasterLayout = ({
   children,
@@ -27,7 +28,10 @@ const MasterLayout = ({
             <Header showHeaderMenus={showHeaderMenus} />
           </When>
 
-          <main className="p-2">{children}</main>
+          <main className="">{children}</main>
+          <div>
+            <FooterMenus />
+          </div>
 
           {/* <When isTrue={showFooter}>
           <footer className="bg-gray-900 text-white">FOOTER</footer>

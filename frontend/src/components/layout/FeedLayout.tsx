@@ -1,6 +1,5 @@
 'use client';
 
-import FooterMenus from '@/components/layout/FooterMenus';
 import MasterLayout from '@/components/layout/MasterLayout';
 import SidebarMenus from '@/components/layout/SidebarMenus';
 
@@ -15,16 +14,12 @@ const FeedLayout = ({ children }: { children: React.ReactNode }) => {
           <SidebarMenus />
         </div>
 
-        <div className="bg-blue-500 w-full fixed bottom-0 md:hidden p-4">
-          <FooterMenus />
-        </div>
-
         <div className="w-full md:w-3/5 h-auto">
           <main>{children}</main>
         </div>
 
         <div
-          className="w-full md:w-1/5 sticky z-20 top-20 text-white bg-gray-700 p-4 rounded shadow"
+          className="w-full md:w-1/5 hidden md:block sticky z-20 top-20 text-white bg-gray-700 p-4 rounded shadow"
           style={{ height: '80vh' }}
         >
           Suggested Users Suggested Users Suggested Users Suggested Users Suggested Users Suggested Users Suggested

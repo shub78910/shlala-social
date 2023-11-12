@@ -14,7 +14,15 @@ const UserPostsGrid = ({ posts }: { posts: IProps[] }) => {
         return (
           <Link href={`/post/${post._id}`}>
             <div className="m-1 flex justify-center bg-red-50 cursor-pointer">
-              <Image src={post.image} alt={post.caption} height={150} width={200} className="object-cover" />
+              <Image
+                src={post.image}
+                alt={post.caption}
+                height={100}
+                width={100}
+                layout="responsive"
+                sizes="(max-width: 600px) 100vw, (max-width: 1023px) 50vw, 25vw)"
+                className="object-cover max-h-32"
+              />
             </div>
           </Link>
         );

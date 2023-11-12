@@ -17,7 +17,7 @@ const HeaderMenus = () => {
   const { user } = useAppSelector((state) => state.user);
 
   const navigateToProfile = () => {
-    router.push('/profile');
+    router.push(`/profile/${user?._id}`);
   };
 
   const logout = () => {
@@ -52,7 +52,7 @@ const HeaderMenus = () => {
       </When>
 
       <When isTrue={showMenuList}>
-        <div className="bg-gray-800 absolute top-12 right-0 text-white w-40 rounded-md z-50">
+        <div className="bg-gray-600 absolute top-12 right-0 text-white w-40 rounded-md z-50">
           <div>
             <button
               className={`text-lg p-2 text-left w-full block font-semibold text-white rounded-md bg-transparent hover:bg-gray-700 cursor-pointer border-none outline-none `}

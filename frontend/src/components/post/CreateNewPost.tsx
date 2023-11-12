@@ -14,6 +14,7 @@ import ButtonWithSpinner from '../formComponents/ButtonWithSpinner';
 import { ImageUploadResponse } from '@/Interface';
 import ImageUploader from '../ImageUploader';
 import Modal from '../Modal';
+import { apiCall } from '@/api/apiCall';
 
 interface ISubmitData {
   caption: string;
@@ -38,16 +39,7 @@ const CreateNewPost = ({ setModalOpen }: { setModalOpen: React.Dispatch<React.Se
     resolver: yupResolver(
       yup.object().shape({
         caption: yup.string().required('Caption is required'),
-        media: yup
-          .mixed()
-          // .test('fileSize', 'File size is too large', (value: any) => {
-
-          //   return value && value[0].size <= 1024000; // 1 MB
-          // })
-          // .test('fileFormat', 'Unsupported file format', (value: any) => {
-          //   return value && value[0].type.startsWith('image/');
-          // })
-          .required('Please upload an image'),
+        media: yup.mixed().required('Please upload an image'),
       }),
     ),
   });
@@ -57,18 +49,19 @@ const CreateNewPost = ({ setModalOpen }: { setModalOpen: React.Dispatch<React.Se
   };
 
   const onSubmit = async (data: ISubmitData) => {
-    setLoading(true);
-    const res: ImageUploadResponse = await uploadImage(images[0]);
-
-    await mutation.mutateAsync({ caption: data.caption, image: res.url });
-    setLoading(false);
-
-    closeModal();
+    apiCall({
+      fn: async () => {
+        const res: ImageUploadResponse = await uploadImage(images[0]);
+        await mutation.mutateAsync({ caption: data.caption, image: res.url });
+        closeModal();
+      },
+      setLoading,
+    });
   };
 
   return (
     <Modal>
-      <div className="flex justify-end cursor-pointer" onClick={() => closeModal()}>
+      <div className="flex justify-end cursor-pointer z-50" onClick={() => closeModal()}>
         <MdOutlineCancel size={20} />
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>

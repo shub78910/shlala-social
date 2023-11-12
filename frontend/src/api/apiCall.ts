@@ -1,7 +1,10 @@
-export const apiCall = ({ fn, setLoading }: { fn: () => void; setLoading: (loading: boolean) => void }) => {
+import { AxiosPromise } from 'axios';
+
+export const apiCall = async ({ fn, setLoading }: { fn: any; setLoading: (loading: boolean) => void }) => {
   try {
     setLoading(true);
-    const res = fn();
+
+    const res = await fn();
     return res;
   } catch (e) {
     console.log(e);
